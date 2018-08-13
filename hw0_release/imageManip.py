@@ -18,7 +18,8 @@ def load(image_path):
 
     ### YOUR CODE HERE
     # Use skimage io.imread
-    pass
+    out = io.imread(image_path)
+    
     ### END YOUR CODE
 
     return out
@@ -38,7 +39,7 @@ def change_value(image):
     out = None
 
     ### YOUR CODE HERE
-    pass
+    out = 0.5 * np.square(image)
     ### END YOUR CODE
 
     return out
@@ -51,12 +52,12 @@ def convert_to_grey_scale(image):
         image: numpy array of shape(image_height, image_width, 3)
 
     Returns:
-        out: numpy array of shape(image_height, image_width, 3)
+        out: numpy array of shape(image_height, image_width)
     """
     out = None
 
     ### YOUR CODE HERE
-    pass
+    out = np.sum(image, axis=2) / 3
     ### END YOUR CODE
 
     return out
@@ -75,7 +76,10 @@ def rgb_decomposition(image, channel):
     out = None
 
     ### YOUR CODE HERE
-    pass
+    image = np.array(image)
+    color = {'r':0, 'g':1, 'b':2}
+    image[..., color[channel.lower()]] = 0
+    out = image
     ### END YOUR CODE
 
     return out
@@ -95,7 +99,12 @@ def lab_decomposition(image, channel):
     out = None
 
     ### YOUR CODE HERE
-    pass
+
+    color_dict = {'l': 0, 'a': 1, 'b': 2}
+    lab = (lab + np.abs(np.min(lab)))
+    lab = lab / np.max(lab)
+    lab[:, :, color_dict[channel.lower()]] =  0
+    out = lab
     ### END YOUR CODE
 
     return out
@@ -115,7 +124,9 @@ def hsv_decomposition(image, channel='H'):
     out = None
 
     ### YOUR CODE HERE
-    pass
+    color_dict = {'h': 0, 's': 1, 'v': 2}
+    hsv[:, :, color_dict[channel.lower()]] = 0
+    out = hsv
     ### END YOUR CODE
 
     return out
@@ -136,7 +147,15 @@ def mix_images(image1, image2, channel1, channel2):
 
     out = None
     ### YOUR CODE HERE
-    pass
+    color = {'r':0, 'g':1, 'b':2}
+    image1[..., color[channel1.lower()]] = 0
+    image2[..., color[channel2.lower()]] = 0
+    h, w = image1.shape[:2]
+
+    new_img = np.zeros_like(image1)
+    new_img[:, :w//2, :] = image1[:, :w//2, :]
+    new_img[:, w//2:, :] = image2[:, w//2:, :]
+    out = new_img
     ### END YOUR CODE
 
     return out
